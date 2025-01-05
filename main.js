@@ -17,6 +17,24 @@ class Tree {
         const unique = [...new Set(sorted)];
         return recursiveBST(unique, 0, unique.length - 1);
     }
+    insertValue(currentRoot, value) {        
+        if (currentRoot === null) {
+          return new Node(value);
+        }
+
+        if (value == currentRoot.data) {
+          console.log('eh')
+            return currentRoot;
+        }
+
+        if (value < currentRoot.data) {
+          currentRoot.left = this.insertValue(currentRoot.left, value);
+        } else if (value > currentRoot.data) {
+          currentRoot.right = this.insertValue(currentRoot.right, value);
+        }
+
+        return currentRoot;
+    }
 }
 
 function recursiveBST (arr, start, end) {
@@ -72,4 +90,5 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
+
 prettyPrint(ta.root);
