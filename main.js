@@ -23,7 +23,6 @@ class Tree {
         }
 
         if (value == currentRoot.data) {
-          console.log('eh')
             return currentRoot;
         }
 
@@ -35,6 +34,40 @@ class Tree {
 
         return currentRoot;
     }
+    removeValue(currentRoot, value) {
+
+      if (currentRoot === null) {
+        return currentRoot;
+      }
+
+      if (value == currentRoot.data) {
+        if (currentRoot.left === null) {
+          return currentRoot.right;
+        } else if (currentRoot.right == null) {
+          return currentRoot.left;
+        } else {
+          const smallestChild = findSmallestChild(currentRoot.right);
+          currentRoot.data = smallestChild.data;
+          currentRoot.right = this.removeValue(currentRoot.right, smallestChild.data);
+          return currentRoot;
+        }
+      }
+
+      if (value < currentRoot.data) {
+        currentRoot.left = this.removeValue(currentRoot.left, value);
+      } else if (value > currentRoot.data) {
+        currentRoot.right = this.removeValue(currentRoot.right, value);
+      }
+
+      return currentRoot;
+    }
+}
+
+function findSmallestChild (root) {
+  if (root.left) {
+    return findSmallestChild(root.left);
+  }
+  return root;
 }
 
 function recursiveBST (arr, start, end) {
@@ -90,5 +123,6 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-
+prettyPrint(ta.root);
+ta.root = ta.removeValue(ta.root, 8);
 prettyPrint(ta.root);
