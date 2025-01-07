@@ -22,25 +22,25 @@ class Tree {
           return new Node(value);
         }
 
-        if (value == currentRoot.data) {
-            return currentRoot;
-        }
-
         if (value < currentRoot.data) {
           currentRoot.left = this.insertValue(currentRoot.left, value);
         } else if (value > currentRoot.data) {
           currentRoot.right = this.insertValue(currentRoot.right, value);
+        } else {
+            return currentRoot;
         }
-
         return currentRoot;
     }
     removeValue(currentRoot, value) {
-
       if (currentRoot === null) {
         return currentRoot;
       }
 
-      if (value == currentRoot.data) {
+      if (value < currentRoot.data) {
+        currentRoot.left = this.removeValue(currentRoot.left, value);
+      } else if (value > currentRoot.data) {
+        currentRoot.right = this.removeValue(currentRoot.right, value);
+      } else {
         if (currentRoot.left === null) {
           return currentRoot.right;
         } else if (currentRoot.right == null) {
@@ -52,14 +52,20 @@ class Tree {
           return currentRoot;
         }
       }
-
-      if (value < currentRoot.data) {
-        currentRoot.left = this.removeValue(currentRoot.left, value);
-      } else if (value > currentRoot.data) {
-        currentRoot.right = this.removeValue(currentRoot.right, value);
-      }
-
       return currentRoot;
+    }
+    find(value) {
+      let currentRoot = this.root;
+      while (currentRoot) {
+        if (value < currentRoot.data) {
+          currentRoot = currentRoot.left;
+        } else if (value > currentRoot.data) {
+          currentRoot = currentRoot.right;
+        } else {
+          return currentRoot;
+        }
+      }
+      return this.root;
     }
 }
 
@@ -124,5 +130,5 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 prettyPrint(ta.root);
-ta.root = ta.removeValue(ta.root, 8);
-prettyPrint(ta.root);
+
+console.log(ta.find(2))
