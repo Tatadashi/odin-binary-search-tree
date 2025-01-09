@@ -1,96 +1,112 @@
 class Node {
-    constructor (data) {
-        this.data = data;
-        this.left = null;
-        this.right = null;
-    }
+  constructor(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
+  }
 }
 
 class Tree {
-    constructor (elements) {
-        this.elements = elements;
-        this.root = this.buildTree(this.elements);
+  constructor(elements) {
+    if (!Array.isArray(elements)) {
+      throw new Error("Tree needs array as parameter upon initialization");
+    }
+    this.elements = elements;
+    this.root = this.buildTree(this.elements);
+  }
+
+  buildTree(array) {
+    const sorted = mergeSort(array);
+    const unique = [...new Set(sorted)];
+    return recursiveBST(unique, 0, unique.length - 1);
+  }
+  insertValue(currentRoot, value) {
+    if (currentRoot === null) {
+      return new Node(value);
     }
 
-    buildTree(array) {
-        const sorted = mergeSort(array);
-        const unique = [...new Set(sorted)];
-        return recursiveBST(unique, 0, unique.length - 1);
-    }
-    insertValue(currentRoot, value) {        
-        if (currentRoot === null) {
-          return new Node(value);
-        }
-
-        if (value < currentRoot.data) {
-          currentRoot.left = this.insertValue(currentRoot.left, value);
-        } else if (value > currentRoot.data) {
-          currentRoot.right = this.insertValue(currentRoot.right, value);
-        } else {
-            return currentRoot;
-        }
-        return currentRoot;
-    }
-    removeValue(currentRoot, value) {
-      if (currentRoot === null) {
-        return currentRoot;
-      }
-
-      if (value < currentRoot.data) {
-        currentRoot.left = this.removeValue(currentRoot.left, value);
-      } else if (value > currentRoot.data) {
-        currentRoot.right = this.removeValue(currentRoot.right, value);
-      } else {
-        if (currentRoot.left === null) {
-          return currentRoot.right;
-        } else if (currentRoot.right == null) {
-          return currentRoot.left;
-        } else {
-          const smallestChild = findSmallestChild(currentRoot.right);
-          currentRoot.data = smallestChild.data;
-          currentRoot.right = this.removeValue(currentRoot.right, smallestChild.data);
-          return currentRoot;
-        }
-      }
+    if (value < currentRoot.data) {
+      currentRoot.left = this.insertValue(currentRoot.left, value);
+    } else if (value > currentRoot.data) {
+      currentRoot.right = this.insertValue(currentRoot.right, value);
+    } else {
       return currentRoot;
     }
-    find(value) {
-      let currentRoot = this.root;
-      while (currentRoot) {
-        if (value < currentRoot.data) {
-          currentRoot = currentRoot.left;
-        } else if (value > currentRoot.data) {
-          currentRoot = currentRoot.right;
-        } else {
-          return currentRoot;
-        }
-      }
-      return this.root;
+    return currentRoot;
+  }
+  removeValue(currentRoot, value) {
+    if (currentRoot === null) {
+      return currentRoot;
     }
+
+    if (value < currentRoot.data) {
+      currentRoot.left = this.removeValue(currentRoot.left, value);
+    } else if (value > currentRoot.data) {
+      currentRoot.right = this.removeValue(currentRoot.right, value);
+    } else {
+      if (currentRoot.left === null) {
+        return currentRoot.right;
+      } else if (currentRoot.right == null) {
+        return currentRoot.left;
+      } else {
+        const smallestChild = findSmallestChild(currentRoot.right);
+        currentRoot.data = smallestChild.data;
+        currentRoot.right = this.removeValue(
+          currentRoot.right,
+          smallestChild.data
+        );
+        return currentRoot;
+      }
+    }
+    return currentRoot;
+  }
+  find(value) {
+    let currentRoot = this.root;
+    while (currentRoot) {
+      if (value < currentRoot.data) {
+        currentRoot = currentRoot.left;
+      } else if (value > currentRoot.data) {
+        currentRoot = currentRoot.right;
+      } else {
+        return currentRoot;
+      }
+    }
+    return this.root;
+  }
+  levelOrder(callback) {
+    if (!callback) {
+      throw new Error("Callback is required for levelOrder");
+    }
+    const queue = [];
+    if (!this.root) {
+      return "empty tree";
+    }
+    queue.push(this.root);
+  }
 }
 
-function findSmallestChild (root) {
+function findSmallestChild(root) {
   if (root.left) {
     return findSmallestChild(root.left);
   }
   return root;
 }
 
-function recursiveBST (arr, start, end) {
-    if (start > end) {
-        return null;
-    }
-    const mid = start + Math.floor((end - start) / 2)
-    const root = new Node(arr[mid]);
-    root.left = recursiveBST(arr, start, mid - 1);
-    root.right = recursiveBST(arr, mid + 1, end);
-    return root;
+function recursiveBST(arr, start, end) {
+  if (start > end) {
+    return null;
+  }
+  const mid = start + Math.floor((end - start) / 2);
+  const root = new Node(arr[mid]);
+  root.left = recursiveBST(arr, start, mid - 1);
+  root.right = recursiveBST(arr, mid + 1, end);
+  return root;
 }
 
 function mergeSort(arr) {
   if (arr.length == 1) {
     return arr;
-  } else {
+  } else if (arr.length > 1) {
     const halfLength = Math.ceil(arr.length / 2);
     const arr1 = arr.slice(0, halfLength);
     const arr2 = arr.slice(halfLength);
@@ -129,6 +145,5 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-prettyPrint(ta.root);
 
-console.log(ta.find(2))
+console.log(ta);
