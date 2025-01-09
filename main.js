@@ -20,6 +20,7 @@ class Tree {
     const unique = [...new Set(sorted)];
     return recursiveBST(unique, 0, unique.length - 1);
   }
+  //rebalance trees (esp if this.root is null), atm this.elements does not change
   insertValue(currentRoot, value) {
     if (currentRoot === null) {
       return new Node(value);
@@ -46,7 +47,7 @@ class Tree {
     } else {
       if (currentRoot.left === null) {
         return currentRoot.right;
-      } else if (currentRoot.right == null) {
+      } else if (currentRoot.right === null) {
         return currentRoot.left;
       } else {
         const smallestChild = findSmallestChild(currentRoot.right);
@@ -77,11 +78,56 @@ class Tree {
     if (!callback) {
       throw new Error("Callback is required for levelOrder");
     }
-    const queue = [];
+
     if (!this.root) {
-      return "empty tree";
+      return console.log("Tree is Empty");
     }
+    const queue = [];
     queue.push(this.root);
+    while (queue.length != 0) {
+      const currentNode = queue[0];
+      callback(currentNode);
+      if (currentNode.left) {
+        queue.push(currentNode.left);
+      }
+
+      if (currentNode.right) {
+        queue.push(currentNode.right);
+      }
+      queue.shift();
+    }
+  }
+  levelOrderRecursive(queue, callback) {
+    if (!callback) {
+      throw new Error("Callback is required for levelOrder");
+    }
+
+    if (!this.root) {
+      return console.log("Tree is Empty");
+    }
+
+    if (queue == this.root) {
+      queue = [];
+      queue.push(this.root);
+      return this.levelOrderRecursive(queue, callback);
+    } else if (queue.length == 0) {
+      //base case here because initial queue will not be an array so .length not execute
+      return;
+    } else {
+      const currentNode = queue[0];
+      callback(currentNode);
+
+      if (currentNode.left) {
+        queue.push(currentNode.left);
+      }
+
+      if (currentNode.right) {
+        queue.push(currentNode.right);
+      }
+
+      queue.shift();
+      return this.levelOrderRecursive(queue, callback);
+    }
   }
 }
 
@@ -145,5 +191,11 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
+prettyPrint(ta.root);
+ta.levelOrderRecursive(ta.root, (node) => {
+  console.log(node.data);
+});
 
-console.log(ta);
+ta.levelOrder((node) => {
+  console.log(node.data);
+});
