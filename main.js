@@ -129,6 +129,52 @@ class Tree {
       return this.levelOrderRecursive(queue, callback);
     }
   }
+  inOrder(callback) {
+    if (!callback) {
+      throw new Error('Callback is required for inOrder');
+    }
+
+    if (!this.root) {
+      return console.log('Tree is Empty');
+    }
+    createQueue(this.root, callback);
+  }
+}
+
+function createQueue(root, callback, queue = []) {
+  queue.push(root);
+  let isGoingDown = true;
+  while (queue.length != 0) {
+    let currentNode = queue[0];
+    if (currentNode.left && isGoingDown) {
+      queue.unshift(currentNode.left);
+      currentNode = currentNode.left;
+    } else if (!currentNode.left && !currentNode.right) {
+      isGoingDown = false;
+      destroyQueue(queue, callback);
+      queue.shift();
+    } else {
+      isGoingDown = false;
+      callback(currentNode);
+      createQueue(currentNode.right, callback);
+      queue.shift();
+    }
+  }
+}
+
+function destroyQueue(queue, callback) {
+  while (queue.length != 0) {
+    //left/root
+    let currentNode = queue[0];
+    callback(currentNode);
+
+    //right
+    if (currentNode.right) {
+      createQueue(currentNode.right, callback);
+    }
+    
+    queue.shift();
+  }
 }
 
 function findSmallestChild(root) {
@@ -192,10 +238,7 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 prettyPrint(ta.root);
-ta.levelOrderRecursive(ta.root, (node) => {
-  console.log(node.data);
-});
 
-ta.levelOrder((node) => {
+ta.inOrder(node => {
   console.log(node.data);
 });
