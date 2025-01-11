@@ -170,6 +170,25 @@ class Tree {
       currentNode = currentNode.right;
     }
   }
+  postOrder(callback) {
+    if (!callback) {
+      throw new Error('Callback is required for postOrder');
+    }
+
+    if (!this.root) {
+      return console.log('Tree is Empty');
+    }
+    postOrderRecursive(this.root);
+    
+    function postOrderRecursive(node) {
+      if (!node) {
+        return;
+      }
+      postOrderRecursive(node.left);
+      postOrderRecursive(node.right);
+      callback(node);
+    }
+  }
 }
 
 function findSmallestChild(root) {
@@ -234,6 +253,6 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 prettyPrint(ta.root);
 
-ta.preOrder(node => {
+ta.postOrder(node => {
   console.log(node.data);
 });
