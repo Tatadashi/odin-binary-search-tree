@@ -137,43 +137,18 @@ class Tree {
     if (!this.root) {
       return console.log('Tree is Empty');
     }
-    createQueue(this.root, callback);
-  }
-}
 
-function createQueue(root, callback, queue = []) {
-  queue.push(root);
-  let isGoingDown = true;
-  while (queue.length != 0) {
-    let currentNode = queue[0];
-    if (currentNode.left && isGoingDown) {
-      queue.unshift(currentNode.left);
-      currentNode = currentNode.left;
-    } else if (!currentNode.left && !currentNode.right) {
-      isGoingDown = false;
-      destroyQueue(queue, callback);
-      queue.shift();
-    } else {
-      isGoingDown = false;
+    let stack = [];
+    let currentNode = this.root;
+    while (currentNode || stack != 0) {
+      while (currentNode) {
+        stack.push(currentNode);
+        currentNode = currentNode.left
+      }
+      currentNode = stack.pop();
       callback(currentNode);
-      createQueue(currentNode.right, callback);
-      queue.shift();
+      currentNode = currentNode.right;
     }
-  }
-}
-
-function destroyQueue(queue, callback) {
-  while (queue.length != 0) {
-    //left/root
-    let currentNode = queue[0];
-    callback(currentNode);
-
-    //right
-    if (currentNode.right) {
-      createQueue(currentNode.right, callback);
-    }
-    
-    queue.shift();
   }
 }
 
