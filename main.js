@@ -203,6 +203,10 @@ class Tree {
     let currentNode = this.root;
     let currentDepth = 0;
     while (currentNode.data != node.data) {
+      if (!currentNode) {
+        currentDepth = -1;
+      }
+
       if (currentNode.data > node.data) {
         currentNode = currentNode.left;
       } else {
@@ -211,6 +215,18 @@ class Tree {
       currentDepth++;
     }
     return currentDepth;
+  }
+  isBalanced(root = this.root) {
+    if (!root) {
+      return true;
+    }
+    const leftHeight = this.height(root.left);
+    const rightHeight = this.height(root.right);
+    const difference = Math.abs(leftHeight - rightHeight);
+    if (difference <= 1 && this.isBalanced(root.left) && this.isBalanced(root.right)) {
+      return true;
+    }
+    return false;
   }
 }
 
@@ -274,7 +290,11 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-ta.insertValue(ta.root, 2);
+ta.insertValue(ta.root, 300);
+ta.insertValue(ta.root, 11);
 
+console.log(ta.isBalanced());
 prettyPrint(ta.root);
-console.log(ta.depth(ta.root.left.left.right.left))
+
+
+
