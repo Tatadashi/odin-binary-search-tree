@@ -131,11 +131,11 @@ class Tree {
   }
   inOrder(callback) {
     if (!callback) {
-      throw new Error('Callback is required for inOrder');
+      throw new Error("Callback is required for inOrder");
     }
 
     if (!this.root) {
-      return console.log('Tree is Empty');
+      return console.log("Tree is Empty");
     }
 
     let stack = [];
@@ -143,7 +143,7 @@ class Tree {
     while (currentNode || stack != 0) {
       while (currentNode) {
         stack.push(currentNode);
-        currentNode = currentNode.left
+        currentNode = currentNode.left;
       }
       currentNode = stack.pop();
       callback(currentNode);
@@ -152,11 +152,11 @@ class Tree {
   }
   preOrder(callback) {
     if (!callback) {
-      throw new Error('Callback is required for preOrder');
+      throw new Error("Callback is required for preOrder");
     }
 
     if (!this.root) {
-      return console.log('Tree is Empty');
+      return console.log("Tree is Empty");
     }
     let stack = [];
     let currentNode = this.root;
@@ -172,14 +172,14 @@ class Tree {
   }
   postOrder(callback) {
     if (!callback) {
-      throw new Error('Callback is required for postOrder');
+      throw new Error("Callback is required for postOrder");
     }
 
     if (!this.root) {
-      return console.log('Tree is Empty');
+      return console.log("Tree is Empty");
     }
     postOrderRecursive(this.root);
-    
+
     function postOrderRecursive(node) {
       if (!node) {
         return;
@@ -188,6 +188,16 @@ class Tree {
       postOrderRecursive(node.right);
       callback(node);
     }
+  }
+  height(node, currentHeight = 0) {
+    if (!node) {
+      return --currentHeight;
+    }
+    currentHeight++;
+    return Math.max(
+      this.height(node.left, currentHeight),
+      this.height(node.right, currentHeight)
+    );
   }
 }
 
@@ -251,8 +261,7 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-prettyPrint(ta.root);
+ta.insertValue(ta.root, 2);
 
-ta.postOrder(node => {
-  console.log(node.data);
-});
+prettyPrint(ta.root);
+console.log(ta.height(ta.root.left.left))
