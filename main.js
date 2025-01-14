@@ -199,6 +199,19 @@ class Tree {
       this.height(node.right, currentHeight)
     );
   }
+  depth(node) {
+    let currentNode = this.root;
+    let currentDepth = 0;
+    while (currentNode.data != node.data) {
+      if (currentNode.data > node.data) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+      currentDepth++;
+    }
+    return currentDepth;
+  }
 }
 
 function findSmallestChild(root) {
@@ -264,4 +277,4 @@ const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 ta.insertValue(ta.root, 2);
 
 prettyPrint(ta.root);
-console.log(ta.height(ta.root.left.left))
+console.log(ta.depth(ta.root.left.left.right.left))
