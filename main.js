@@ -20,7 +20,6 @@ class Tree {
     const unique = [...new Set(sorted)];
     return recursiveBST(unique, 0, unique.length - 1);
   }
-  //rebalance trees (esp if this.root is null), atm this.elements does not change
   insertValue(currentRoot, value) {
     if (currentRoot === null) {
       return new Node(value);
@@ -228,6 +227,14 @@ class Tree {
     }
     return false;
   }
+  rebalance() {
+    const newElements = [];
+    this.levelOrder(node => {
+      newElements.push(node.data);
+    });
+    this.elements = newElements;
+    this.root = this.buildTree(this.elements);
+  }
 }
 
 function findSmallestChild(root) {
@@ -294,6 +301,7 @@ ta.insertValue(ta.root, 300);
 ta.insertValue(ta.root, 11);
 
 console.log(ta.isBalanced());
+ta.rebalance();
 prettyPrint(ta.root);
 
 
