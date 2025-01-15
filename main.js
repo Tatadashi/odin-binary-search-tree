@@ -222,14 +222,18 @@ class Tree {
     const leftHeight = this.height(root.left);
     const rightHeight = this.height(root.right);
     const difference = Math.abs(leftHeight - rightHeight);
-    if (difference <= 1 && this.isBalanced(root.left) && this.isBalanced(root.right)) {
+    if (
+      difference <= 1 &&
+      this.isBalanced(root.left) &&
+      this.isBalanced(root.right)
+    ) {
       return true;
     }
     return false;
   }
   rebalance() {
     const newElements = [];
-    this.levelOrder(node => {
+    this.levelOrder((node) => {
       newElements.push(node.data);
     });
     this.elements = newElements;
@@ -296,13 +300,4 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-const ta = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-ta.insertValue(ta.root, 300);
-ta.insertValue(ta.root, 11);
-
-console.log(ta.isBalanced());
-ta.rebalance();
-prettyPrint(ta.root);
-
-
-
+export { Tree, prettyPrint };
